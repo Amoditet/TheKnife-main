@@ -39,6 +39,16 @@ public class RestaurantDetailController {
     private Button bookButton;
     @FXML
     private Button reviewButton;
+    @FXML
+    private Button bookBtn;
+    @FXML
+    private Button favoriteBtn;
+    @FXML
+    private Button signInBtn;
+    @FXML
+    private javafx.scene.layout.HBox guestButtons;
+    @FXML
+    private javafx.scene.layout.HBox userButtons;
 
     private Restaurant restaurant;
 
@@ -86,29 +96,108 @@ public class RestaurantDetailController {
             e.printStackTrace();
         }
 
+        if (bookBtn != null) {
+            bookBtn.managedProperty().bind(bookBtn.visibleProperty());
+            bookBtn.setOnAction(event -> openBookingsPage());
+        }
+        if (favoriteBtn != null) {
+            favoriteBtn.managedProperty().bind(favoriteBtn.visibleProperty());
+            favoriteBtn.setOnAction(event -> openFavoritesPage());
+        }
+        if (signInBtn != null) {
+            signInBtn.managedProperty().bind(signInBtn.visibleProperty());
+            signInBtn.setOnAction(event -> openLoginPage());
+        }
+        if (guestButtons != null) {
+            guestButtons.managedProperty().bind(guestButtons.visibleProperty());
+        }
+        if (userButtons != null) {
+            userButtons.managedProperty().bind(userButtons.visibleProperty());
+        }
+
         updateButtonVisibility();
     }
 
     public void updateButtonVisibility() {
         theknife.UserSession userSession = theknife.UserSession.getInstance();
         if (userSession.isNotLoggedIn()) {
+            if (guestButtons != null) {
+                guestButtons.setVisible(true);
+            }
+            if (userButtons != null) {
+                userButtons.setVisible(false);
+            }
             favoriteButton.setVisible(false);
             bookButton.setVisible(false);
             reviewButton.setVisible(false);
+            if (bookBtn != null) {
+                bookBtn.setVisible(false);
+            }
+            if (favoriteBtn != null) {
+                favoriteBtn.setVisible(false);
+            }
+            if (signInBtn != null) {
+                signInBtn.setVisible(true);
+            }
         } else {
             String role = userSession.getRole();
             if ("client".equalsIgnoreCase(role) || "cliente".equalsIgnoreCase(role)) {
+                if (guestButtons != null) {
+                    guestButtons.setVisible(false);
+                }
+                if (userButtons != null) {
+                    userButtons.setVisible(true);
+                }
                 favoriteButton.setVisible(true);
                 bookButton.setVisible(true);
                 reviewButton.setVisible(true);
+                if (bookBtn != null) {
+                    bookBtn.setVisible(true);
+                }
+                if (favoriteBtn != null) {
+                    favoriteBtn.setVisible(true);
+                }
+                if (signInBtn != null) {
+                    signInBtn.setVisible(false);
+                }
             } else if ("owner".equalsIgnoreCase(role) || "ristoratore".equalsIgnoreCase(role)) {
+                if (guestButtons != null) {
+                    guestButtons.setVisible(false);
+                }
+                if (userButtons != null) {
+                    userButtons.setVisible(true);
+                }
                 favoriteButton.setVisible(false);
                 bookButton.setVisible(false);
                 reviewButton.setVisible(false);
+                if (bookBtn != null) {
+                    bookBtn.setVisible(false);
+                }
+                if (favoriteBtn != null) {
+                    favoriteBtn.setVisible(false);
+                }
+                if (signInBtn != null) {
+                    signInBtn.setVisible(false);
+                }
             } else {
+                if (guestButtons != null) {
+                    guestButtons.setVisible(false);
+                }
+                if (userButtons != null) {
+                    userButtons.setVisible(false);
+                }
                 favoriteButton.setVisible(false);
                 bookButton.setVisible(false);
                 reviewButton.setVisible(false);
+                if (bookBtn != null) {
+                    bookBtn.setVisible(false);
+                }
+                if (favoriteBtn != null) {
+                    favoriteBtn.setVisible(false);
+                }
+                if (signInBtn != null) {
+                    signInBtn.setVisible(false);
+                }
             }
         }
     }
@@ -191,6 +280,46 @@ public class RestaurantDetailController {
             stage.setFullScreenExitKeyCombination(javafx.scene.input.KeyCombination.NO_MATCH);
             stage.setFullScreen(true);
             stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openLoginPage() {
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/view/login.fxml"));
+            javafx.scene.Parent root = loader.load();
+            javafx.stage.Stage stage = (javafx.stage.Stage) signInBtn.getScene().getWindow();
+            stage.setScene(new javafx.scene.Scene(root));
+            stage.setMaximized(true);
+            stage.setFullScreen(true);
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openFavoritesPage() {
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/view/favorite.fxml"));
+            javafx.scene.Parent root = loader.load();
+            javafx.stage.Stage stage = (javafx.stage.Stage) favoriteBtn.getScene().getWindow();
+            javafx.scene.Scene scene = favoriteBtn.getScene();
+            scene.setRoot(root);
+            stage.setTitle("Favorites");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openBookingsPage() {
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/view/bookings.fxml"));
+            javafx.scene.Parent root = loader.load();
+            javafx.stage.Stage stage = (javafx.stage.Stage) bookBtn.getScene().getWindow();
+            javafx.scene.Scene scene = bookBtn.getScene();
+            scene.setRoot(root);
+            stage.setTitle("Bookings");
         } catch (Exception e) {
             e.printStackTrace();
         }
