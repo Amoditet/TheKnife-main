@@ -263,6 +263,7 @@ public class DashboardController {
         javafx.scene.control.Button restaurantsBtn = (javafx.scene.control.Button) rootPane.lookup("#RestaurantsBtn");
         if (restaurantsBtn != null) {
             restaurantsBtn.managedProperty().bind(restaurantsBtn.visibleProperty());
+            restaurantsBtn.setOnAction(event -> openRestaurantsPage());
         }
 
         updateButtonVisibility();
@@ -592,6 +593,19 @@ public class DashboardController {
         pane.getChildren().remove(editField);
         if (!pane.getChildren().contains(locationText)) {
             pane.getChildren().add(index, locationText);
+        }
+    }
+
+    private void openRestaurantsPage() {
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/view/restaurants.fxml"));
+            javafx.scene.Parent root = loader.load();
+            javafx.stage.Stage stage = (javafx.stage.Stage) rootPane.getScene().getWindow();
+            javafx.scene.Scene scene = rootPane.getScene();
+            scene.setRoot(root);
+            stage.setTitle("My Restaurants");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
