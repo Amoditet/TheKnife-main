@@ -9,6 +9,7 @@ public class UserSession {
     private java.util.List<Restaurant> favorites = new java.util.ArrayList<>();
     private java.util.List<Booking> bookings = new java.util.ArrayList<>();
     private java.util.Map<Integer, Review> reviews = new java.util.HashMap<>();
+    private java.util.List<Restaurant> ownedRestaurants = new java.util.ArrayList<>();
 
     public static UserSession getInstance() {
         if (instance == null) {
@@ -63,6 +64,16 @@ public class UserSession {
         if (b != null) {
             bookings.add(b);
         }
+    }
+
+    public void addOwnedRestaurant(Restaurant r) {
+        if (r != null) {
+            ownedRestaurants.add(r);
+        }
+    }
+
+    public java.util.List<Restaurant> getOwnedRestaurants() {
+        return ownedRestaurants;
     }
 
     public java.util.List<Booking> getBookings() {
