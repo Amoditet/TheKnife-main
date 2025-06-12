@@ -7,6 +7,8 @@ public class UserSession {
     private String location;
     private String role;
     private java.util.List<Restaurant> favorites = new java.util.ArrayList<>();
+    private java.util.List<Booking> bookings = new java.util.ArrayList<>();
+    private java.util.Map<Integer, Review> reviews = new java.util.HashMap<>();
 
     public static UserSession getInstance() {
         if (instance == null) {
@@ -55,5 +57,29 @@ public class UserSession {
 
     public java.util.List<Restaurant> getFavorites() {
         return favorites;
+    }
+
+    public void addBooking(Booking b) {
+        if (b != null) {
+            bookings.add(b);
+        }
+    }
+
+    public java.util.List<Booking> getBookings() {
+        return bookings;
+    }
+
+    public Review getReview(int restaurantId) {
+        return reviews.get(restaurantId);
+    }
+
+    public void addOrUpdateReview(int restaurantId, Review r) {
+        if (r != null) {
+            reviews.put(restaurantId, r);
+        }
+    }
+
+    public void deleteReview(int restaurantId) {
+        reviews.remove(restaurantId);
     }
 }
