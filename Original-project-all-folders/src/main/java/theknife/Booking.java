@@ -1,3 +1,5 @@
+package theknife;
+
 public class Booking {
     private String restaurantName;
     private String date;
@@ -9,7 +11,15 @@ public class Booking {
         this.time = time;
     }
 
-    public String getRestaurantName() { return restaurantName; }
-    public String getDate() { return date; }
-    public String getTime() { return time; }
+    public String getRestaurantName() {
+        return restaurantName;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public String getTime() {
+        return time;
+    }
 }

@@ -8,8 +8,12 @@
     <top>
         <HBox spacing="30" style="-fx-background-color: #242424; -fx-padding: 10 20;" alignment="CENTER_LEFT">
             <HBox spacing="20" alignment="CENTER_LEFT">
+                <Button prefWidth="40" prefHeight="32" onAction="#handleGoHome" styleClass="button-back" style="-fx-background-color: transparent; -fx-border-width: 0; -fx-border-color: transparent; -fx-padding: 0;">
+                    <graphic>
+                        <ImageView fx:id="arrowImageView" fitHeight="18" fitWidth="18" pickOnBounds="true" preserveRatio="true"/>
+                    </graphic>
+                </Button>
                 <Text style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-fill: white;">TheKnife</Text>
-                <Text text="Bookings" style="-fx-font-size: 18px; -fx-fill: white; -fx-padding: 0 0 0 20;" />
             </HBox>
             <HBox spacing="15" alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
                 <Region HBox.hgrow="ALWAYS"/>

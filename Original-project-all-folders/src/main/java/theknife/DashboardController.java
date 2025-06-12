@@ -74,7 +74,6 @@ public class DashboardController {
     }
 
     private void filterAndRenderRestaurants() {
-        System.out.println("Filtering restaurants. Total loaded: " + allRestaurants.size());
         String searchTerm = searchInput.getText() != null ? searchInput.getText().toLowerCase() : "";
         String locationTerm = locationText.getText() != null ? locationText.getText().toLowerCase() : "";
 
@@ -98,8 +97,6 @@ public class DashboardController {
                     return locationMatch;
                 })
                 .collect(Collectors.toList());
-
-        System.out.println("Filtered restaurants count: " + filtered.size());
 
         String sortBy = sortComboBox.getValue();
         if (sortBy != null) {
@@ -129,62 +126,6 @@ public class DashboardController {
         }
     }
 
-    private void filterAndRenderRestaurantsCopy() {
-        System.out.println("Filtering restaurants. Total loaded: " + allRestaurants.size());
-        String searchTerm = searchInput.getText() != null ? searchInput.getText().toLowerCase() : "";
-        String locationTerm = locationText.getText() != null ? locationText.getText().toLowerCase() : "";
-
-        List<Restaurant> filtered = allRestaurants.stream()
-                .filter(r -> {
-                    boolean searchMatch = searchTerm.isEmpty() ||
-                            (r.getName() != null && r.getName().toLowerCase().contains(searchTerm)) ||
-                            (r.getDescription() != null && r.getDescription().toLowerCase().contains(searchTerm)) ||
-                            (r.getCuisine() != null && r.getCuisine().toLowerCase().contains(searchTerm));
-                    return searchMatch;
-                })
-                .filter(r -> {
-                    boolean locationMatch = true;
-                    if (!locationTerm.isEmpty() && locationTerm.contains(",")) {
-                        String cityPart = locationTerm.split(",")[0].trim().toLowerCase();
-                        locationMatch = (r.getDistance() != null && r.getDistance().toLowerCase().contains(cityPart));
-                    } else if (!locationTerm.isEmpty()) {
-                        locationMatch = (r.getDistance() != null
-                                && r.getDistance().toLowerCase().contains(locationTerm));
-                    }
-                    return locationMatch;
-                })
-                .collect(Collectors.toList());
-
-        System.out.println("Filtered restaurants count: " + filtered.size());
-
-        String sortBy = sortComboBox.getValue();
-        if (sortBy != null) {
-            switch (sortBy) {
-                case "Rating":
-                    filtered.sort(Comparator.comparingDouble(Restaurant::getRating).reversed());
-                    break;
-                case "Distance":
-                    filtered.sort(Comparator.comparingDouble(this::parseDistance));
-                    break;
-                case "Price":
-                    filtered.sort(Comparator.comparingInt(this::parsePrice));
-                    break;
-            }
-        }
-
-        int fromIndex = 0;
-        int toIndex = Math.min(currentPage * PAGE_SIZE, filtered.size());
-        List<Restaurant> paginatedList = filtered.subList(fromIndex, toIndex);
-
-        renderRestaurants(paginatedList);
-
-        if (toIndex < filtered.size()) {
-            loadMoreBtn.setVisible(true);
-        } else {
-            loadMoreBtn.setVisible(false);
-        }
-    }
-
     private void resetPagination() {
         currentPage = 1;
     }
@@ -194,7 +135,7 @@ public class DashboardController {
         theknife.UserSession userSession = theknife.UserSession.getInstance();
 
         if (userSession.isNotLoggedIn()) {
-            locationText.setText("italy");
+            locationText.setText("italy  ");
             loadRestaurants();
             resetPagination();
             filterAndRenderRestaurants();
@@ -242,7 +183,8 @@ public class DashboardController {
 
         favoriteBtn.setOnAction(event -> {
             try {
-                javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/view/favorite.fxml"));
+                javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
+                        getClass().getResource("/view/favorite.fxml"));
                 javafx.scene.Parent root = loader.load();
                 javafx.stage.Stage stage = (javafx.stage.Stage) favoriteBtn.getScene().getWindow();
                 javafx.scene.Scene scene = favoriteBtn.getScene();
@@ -598,7 +540,8 @@ public class DashboardController {
 
     private void openRestaurantsPage() {
         try {
-            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/view/restaurants.fxml"));
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
+                    getClass().getResource("/view/restaurants.fxml"));
             javafx.scene.Parent root = loader.load();
             javafx.stage.Stage stage = (javafx.stage.Stage) rootPane.getScene().getWindow();
             javafx.scene.Scene scene = rootPane.getScene();

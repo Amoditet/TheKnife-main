@@ -1,16 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="theknife.RestaurantsController" fx:id="rootPane" stylesheets="@style.css" style="-fx-background-color: #3d3d3d;">
     <top>
         <HBox spacing="30" style="-fx-background-color: #242424; -fx-padding: 10 20;" alignment="CENTER_LEFT">
-            <HBox spacing="20" alignment="CENTER_LEFT">
-                <Text style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-fill: white;">TheKnife</Text>
-                <Text text="My Restaurants" style="-fx-font-size: 18px; -fx-fill: white; -fx-padding: 0 0 0 20;" />
-            </HBox>
+        <HBox spacing="20" alignment="CENTER_LEFT">
+            <Button prefWidth="40" prefHeight="32" onAction="#handleGoHome" styleClass="button-back" style="-fx-background-color: transparent; -fx-border-width: 0; -fx-border-color: transparent; -fx-padding: 0;">
+                <graphic>
+                    <ImageView fx:id="arrowImageView" fitHeight="18" fitWidth="18" pickOnBounds="true" preserveRatio="true"/>
+                </graphic>
+            </Button>
+            <Button prefWidth="40" prefHeight="32" onAction="#handleClose" styleClass="button-close" style="-fx-background-color: transparent; -fx-border-width: 0; -fx-border-color: transparent; -fx-padding: 0;">
+                <Text style="-fx-font-size: 18px; -fx-fill: white;">X</Text>
+            </Button>
+            <Text style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-fill: white;">TheKnife</Text>
+            <Button prefWidth="60" prefHeight="32" onAction="#handleAdd" styleClass="button-add" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;">
+                Add
+            </Button>
+        </HBox>
         </HBox>
     </top>
 

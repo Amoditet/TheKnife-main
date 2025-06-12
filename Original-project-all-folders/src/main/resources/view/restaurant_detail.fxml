@@ -16,7 +16,10 @@
                     <graphic>
                         <ImageView fx:id="arrowImageView" fitHeight="18" fitWidth="18" pickOnBounds="true" preserveRatio="true"/>
                     </graphic>
-                </Button>            
+                </Button>
+            
+                <Text style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-fill: white;">TheKnife</Text>
+            
             </HBox>
 
             <HBox spacing="15" style="-fx-background-color: #242424; -fx-padding: 10 20;" alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
