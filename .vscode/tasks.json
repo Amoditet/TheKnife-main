@@ -1,0 +1,66 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Compila il progetto",
+      "type": "shell",
+      "command": "javac",
+      "args": [
+        "--module-path",
+        "C:/Users/39328/Desktop/TheKnife/javafx-sdk-24.0.1/lib",
+        "--add-modules",
+        "javafx.controls,javafx.fxml",
+        "-d",
+        "bin",
+        "-sourcepath",
+        "src",
+        "src/app/Main.java"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "dependsOn": ["Copia risorse", "Copia FXML"]
+    },
+    {
+      "label": "Esegui il progetto",
+      "type": "shell",
+      "command": "java",
+      "args": [
+        "--module-path",
+        "C:/Users/39328/Desktop/TheKnife/javafx-sdk-24.0.1/lib",
+        "--add-modules",
+        "javafx.controls,javafx.fxml",
+        "-cp",
+        "bin",
+        "app.Main"
+      ],
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "Copia risorse",
+      "type": "shell",
+      "command": "xcopy",
+      "args": [
+        "src\\resources",
+        "bin\\resources",
+        "/E", "/Y", "/I"
+      ],
+      "problemMatcher": []
+    },
+
+    {      "label": "Copia FXML",
+      "type": "shell",
+      "command": "xcopy",
+      "args": [
+        "src\\view",
+        "bin\\view",
+        "/E", "/Y", "/I"
+      ],
+      "problemMatcher": []
+    }
+  ]
+}

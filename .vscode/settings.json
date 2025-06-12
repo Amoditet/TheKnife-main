@@ -1,0 +1,7 @@
+{
+  "java.project.referencedLibraries": [
+    "C:/Users/39328/Desktop/TheKnife/javafx-sdk-24.0.1/lib/**/*.jar"
+  ],
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "CodeGPT.apiKey": "CodeGPT Plus Beta"
+}
