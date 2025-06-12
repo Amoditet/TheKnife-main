@@ -39,6 +39,12 @@ public class RestaurantDetailController {
     private Button bookButton;
     @FXML
     private Button reviewButton;
+    @FXML
+    private Button bookBtn;
+    @FXML
+    private Button favoriteBtn;
+    @FXML
+    private Button signInBtn;
 
     private Restaurant restaurant;
 
@@ -86,6 +92,16 @@ public class RestaurantDetailController {
             e.printStackTrace();
         }
 
+        if (bookBtn != null) {
+            bookBtn.managedProperty().bind(bookBtn.visibleProperty());
+        }
+        if (favoriteBtn != null) {
+            favoriteBtn.managedProperty().bind(favoriteBtn.visibleProperty());
+        }
+        if (signInBtn != null) {
+            signInBtn.managedProperty().bind(signInBtn.visibleProperty());
+        }
+
         updateButtonVisibility();
     }
 
@@ -95,20 +111,56 @@ public class RestaurantDetailController {
             favoriteButton.setVisible(false);
             bookButton.setVisible(false);
             reviewButton.setVisible(false);
+            if (bookBtn != null) {
+                bookBtn.setVisible(false);
+            }
+            if (favoriteBtn != null) {
+                favoriteBtn.setVisible(false);
+            }
+            if (signInBtn != null) {
+                signInBtn.setVisible(true);
+            }
         } else {
             String role = userSession.getRole();
             if ("client".equalsIgnoreCase(role) || "cliente".equalsIgnoreCase(role)) {
                 favoriteButton.setVisible(true);
                 bookButton.setVisible(true);
                 reviewButton.setVisible(true);
+                if (bookBtn != null) {
+                    bookBtn.setVisible(true);
+                }
+                if (favoriteBtn != null) {
+                    favoriteBtn.setVisible(true);
+                }
+                if (signInBtn != null) {
+                    signInBtn.setVisible(false);
+                }
             } else if ("owner".equalsIgnoreCase(role) || "ristoratore".equalsIgnoreCase(role)) {
                 favoriteButton.setVisible(false);
                 bookButton.setVisible(false);
                 reviewButton.setVisible(false);
+                if (bookBtn != null) {
+                    bookBtn.setVisible(false);
+                }
+                if (favoriteBtn != null) {
+                    favoriteBtn.setVisible(false);
+                }
+                if (signInBtn != null) {
+                    signInBtn.setVisible(false);
+                }
             } else {
                 favoriteButton.setVisible(false);
                 bookButton.setVisible(false);
                 reviewButton.setVisible(false);
+                if (bookBtn != null) {
+                    bookBtn.setVisible(false);
+                }
+                if (favoriteBtn != null) {
+                    favoriteBtn.setVisible(false);
+                }
+                if (signInBtn != null) {
+                    signInBtn.setVisible(false);
+                }
             }
         }
     }
