@@ -18,6 +18,9 @@ public class RestaurantsController {
     private Button addRestaurantBtn;
 
     @FXML
+    private Button exitBtn;
+
+    @FXML
     public void initialize() {
         loadRestaurants();
     }
@@ -45,5 +48,11 @@ public class RestaurantsController {
         if (restaurantListView.getItems().isEmpty()) {
             restaurantListView.getItems().add("No restaurants added.");
         }
+    }
+
+    @FXML
+    private void handleExitAction() {
+        javafx.application.Platform.exit();
+        System.exit(0);
     }
 }

@@ -20,6 +20,8 @@ public class BookingsController {
     private Button bookBtn;
     @FXML
     private Button RestaurantsBtn;
+    @FXML
+    private Button exitBtn;
 
     @FXML
     public void initialize() {
@@ -70,5 +72,11 @@ public class BookingsController {
                 }
             }
         }
+    }
+
+    @FXML
+    private void handleExitAction() {
+        javafx.application.Platform.exit();
+        System.exit(0);
     }
 }
