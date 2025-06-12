@@ -139,6 +139,15 @@ public class RestaurantDetailController {
             if (signInBtn != null) {
                 signInBtn.setVisible(true);
             }
+            if (bookBtn != null) {
+                bookBtn.setVisible(false);
+            }
+            if (favoriteBtn != null) {
+                favoriteBtn.setVisible(false);
+            }
+            if (signInBtn != null) {
+                signInBtn.setVisible(true);
+            }
         } else {
             String role = userSession.getRole();
             if ("client".equalsIgnoreCase(role) || "cliente".equalsIgnoreCase(role)) {
@@ -151,6 +160,15 @@ public class RestaurantDetailController {
                 favoriteButton.setVisible(true);
                 bookButton.setVisible(true);
                 reviewButton.setVisible(true);
+                if (bookBtn != null) {
+                    bookBtn.setVisible(true);
+                }
+                if (favoriteBtn != null) {
+                    favoriteBtn.setVisible(true);
+                }
+                if (signInBtn != null) {
+                    signInBtn.setVisible(false);
+                }
                 if (bookBtn != null) {
                     bookBtn.setVisible(true);
                 }
@@ -179,6 +197,15 @@ public class RestaurantDetailController {
                 if (signInBtn != null) {
                     signInBtn.setVisible(false);
                 }
+                if (bookBtn != null) {
+                    bookBtn.setVisible(false);
+                }
+                if (favoriteBtn != null) {
+                    favoriteBtn.setVisible(false);
+                }
+                if (signInBtn != null) {
+                    signInBtn.setVisible(false);
+                }
             } else {
                 if (guestButtons != null) {
                     guestButtons.setVisible(false);
@@ -189,6 +216,15 @@ public class RestaurantDetailController {
                 favoriteButton.setVisible(false);
                 bookButton.setVisible(false);
                 reviewButton.setVisible(false);
+                if (bookBtn != null) {
+                    bookBtn.setVisible(false);
+                }
+                if (favoriteBtn != null) {
+                    favoriteBtn.setVisible(false);
+                }
+                if (signInBtn != null) {
+                    signInBtn.setVisible(false);
+                }
                 if (bookBtn != null) {
                     bookBtn.setVisible(false);
                 }
