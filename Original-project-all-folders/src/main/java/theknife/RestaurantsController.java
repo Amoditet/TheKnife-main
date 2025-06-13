@@ -55,4 +55,10 @@ public class RestaurantsController {
         javafx.application.Platform.exit();
         System.exit(0);
     }
+
+    @FXML
+    private void handleGoHome() {
+        // TODO: Implement navigation to home/dashboard page
+        System.out.println("Go Home button clicked");
+    }
 }

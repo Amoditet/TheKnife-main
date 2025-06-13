@@ -1,3 +1,5 @@
+package theknife;
+
 public class Review {
     private String username;
     private int rating;
@@ -9,9 +11,23 @@ public class Review {
         this.text = text;
     }
 
-    public String getUsername() { return username; }
-    public int getRating() { return rating; }
-    public void setRating(int r) { this.rating = r; }
-    public String getText() { return text; }
-    public void setText(String t) { this.text = t; }
+    public String getUsername() {
+        return username;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int r) {
+        this.rating = r;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String t) {
+        this.text = t;
+    }
 }

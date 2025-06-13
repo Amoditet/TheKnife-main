@@ -1,9 +1,13 @@
-theknife\Restaurant.class
 theknife\DashboardController.class
 theknife\LoginController.class
 theknife\Main.class
+theknife\RestaurantsController.class
+theknife\RestaurantDetailController.class
+theknife\Restaurant.class
+theknife\Review.class
 theknife\FavoritesController.class
+theknife\BookingsController.class
+theknife\Booking.class
 theknife\UserSession.class
 theknife\RegisterController.class
-theknife\RestaurantDetailController.class
 theknife\HomeController.class
