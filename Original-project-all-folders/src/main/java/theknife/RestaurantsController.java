@@ -4,11 +4,28 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextInputDialog;
-
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import theknife.UserSession;
 import theknife.Restaurant;
 
 import java.util.Optional;
+
+import javafx.fxml.FXML;
+import javafx.scene.control.ListView;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextInputDialog;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.collections.ObservableList;
+import javafx.collections.FXCollections;
+import theknife.UserSession;
+import theknife.Restaurant;
+
+import java.util.Optional;
+import java.util.List;
 
 public class RestaurantsController {
     @FXML
@@ -21,8 +38,36 @@ public class RestaurantsController {
     private Button exitBtn;
 
     @FXML
+    private ImageView arrowImageView;
+
+    @FXML
+    private Button loadMoreBtn;
+    @FXML
+    private Button leftArrowBtn;
+    @FXML
+    private Button rightArrowBtn;
+
+    private static final int PAGE_SIZE = 20;
+    private int currentPage = 0;
+    private ObservableList<String> restaurantNames = FXCollections.observableArrayList();
+
+    @FXML
     public void initialize() {
-        loadRestaurants();
+        loadRestaurantsPage(0);
+
+        try {
+            Image arrowImage = new Image(getClass().getResourceAsStream("/images/left-arrow.png"));
+            arrowImageView.setImage(arrowImage);
+            ColorAdjust whiteEffect = new ColorAdjust();
+            whiteEffect.setBrightness(1.0);
+            arrowImageView.setEffect(whiteEffect);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        leftArrowBtn.setOnAction(event -> loadPreviousPage());
+        rightArrowBtn.setOnAction(event -> loadNextPage());
     }
 
     @FXML
@@ -36,17 +81,48 @@ public class RestaurantsController {
             int id = session.getOwnedRestaurants().size() + 1;
             Restaurant r = new Restaurant(id, result.get().trim(), "", 0.0, 0, "", "", "", "");
             session.addOwnedRestaurant(r);
-            loadRestaurants();
+            resetRestaurants();
         }
     }
 
-    private void loadRestaurants() {
-        restaurantListView.getItems().clear();
-        for (Restaurant r : UserSession.getInstance().getOwnedRestaurants()) {
-            restaurantListView.getItems().add(r.getName());
+    private void resetRestaurants() {
+        currentPage = 0;
+        restaurantNames.clear();
+        loadRestaurantsPage(currentPage);
+    }
+
+    private void loadRestaurantsPage(int page) {
+        List<Restaurant> allRestaurants = UserSession.getInstance().getOwnedRestaurants();
+        int start = page * PAGE_SIZE;
+        int end = Math.min(start + PAGE_SIZE, allRestaurants.size());
+
+        if (start >= allRestaurants.size()) {
+            return; // No more restaurants to load
         }
-        if (restaurantListView.getItems().isEmpty()) {
-            restaurantListView.getItems().add("No restaurants added.");
+
+        for (int i = start; i < end; i++) {
+            restaurantNames.add(allRestaurants.get(i).getName());
+        }
+
+        restaurantListView.setItems(restaurantNames);
+        currentPage = page;
+    }
+
+    private void loadMoreRestaurants() {
+        loadRestaurantsPage(currentPage + 1);
+    }
+
+    private void loadPreviousPage() {
+        if (currentPage > 0) {
+            loadRestaurantsPage(currentPage - 1);
+        }
+    }
+
+    private void loadNextPage() {
+        List<Restaurant> allRestaurants = UserSession.getInstance().getOwnedRestaurants();
+        int maxPage = (allRestaurants.size() - 1) / PAGE_SIZE;
+        if (currentPage < maxPage) {
+            loadRestaurantsPage(currentPage + 1);
         }
     }
 

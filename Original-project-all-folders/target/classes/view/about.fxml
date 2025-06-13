@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="theknife.AboutController" style="-fx-background-color: #3d3d3d;">
+    <center>
+        <Text text="About TheKnife Application" style="-fx-font-size: 24px; -fx-fill: white;"/>
+    </center>
+</BorderPane>

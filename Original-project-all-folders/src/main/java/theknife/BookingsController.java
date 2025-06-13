@@ -2,6 +2,9 @@ package theknife;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 
@@ -24,9 +27,23 @@ public class BookingsController {
     private Button exitBtn;
 
     @FXML
+    private ImageView arrowImageView;
+
+    @FXML
     public void initialize() {
         updateButtonVisibility();
         loadBookings();
+
+        try {
+            Image arrowImage = new Image(getClass().getResourceAsStream("/images/left-arrow.png"));
+            arrowImageView.setImage(arrowImage);
+            ColorAdjust whiteEffect = new ColorAdjust();
+            whiteEffect.setBrightness(1.0);
+            arrowImageView.setEffect(whiteEffect);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadBookings() {

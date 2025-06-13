@@ -26,6 +26,8 @@ public class DashboardController {
     @FXML
     private Text locationText;
     @FXML
+    private Text currentPageText;
+    @FXML
     private Button exitBtn;
     @FXML
     private BorderPane rootPane;
@@ -56,11 +58,12 @@ public class DashboardController {
     private PauseTransition searchPause;
 
     private static final int PAGE_SIZE = 20;
-    private int displayedCount = 0;
     private int currentPage = 1;
 
     @FXML
     private Button loadMoreBtn;
+    @FXML
+    private Button loadLessBtn;
 
     @FXML
     private void handleExitAction() {
@@ -68,13 +71,7 @@ public class DashboardController {
         System.exit(0);
     }
 
-    private void loadMoreRestaurants() {
-        displayedCount += PAGE_SIZE;
-        filterAndRenderRestaurants();
-    }
-
     private void filterAndRenderRestaurants() {
-        System.out.println("Filtering restaurants. Total loaded: " + allRestaurants.size());
         String searchTerm = searchInput.getText() != null ? searchInput.getText().toLowerCase() : "";
         String locationTerm = locationText.getText() != null ? locationText.getText().toLowerCase() : "";
 
@@ -99,16 +96,11 @@ public class DashboardController {
                 })
                 .collect(Collectors.toList());
 
-        System.out.println("Filtered restaurants count: " + filtered.size());
-
         String sortBy = sortComboBox.getValue();
         if (sortBy != null) {
             switch (sortBy) {
                 case "Rating":
                     filtered.sort(Comparator.comparingDouble(Restaurant::getRating).reversed());
-                    break;
-                case "Distance":
-                    filtered.sort(Comparator.comparingDouble(this::parseDistance));
                     break;
                 case "Price":
                     filtered.sort(Comparator.comparingInt(this::parsePrice));
@@ -117,62 +109,6 @@ public class DashboardController {
         }
 
         int fromIndex = (currentPage - 1) * PAGE_SIZE;
-        int toIndex = Math.min(currentPage * PAGE_SIZE, filtered.size());
-        List<Restaurant> paginatedList = filtered.subList(fromIndex, toIndex);
-
-        renderRestaurants(paginatedList);
-
-        if (toIndex < filtered.size()) {
-            loadMoreBtn.setVisible(true);
-        } else {
-            loadMoreBtn.setVisible(false);
-        }
-    }
-
-    private void filterAndRenderRestaurantsCopy() {
-        System.out.println("Filtering restaurants. Total loaded: " + allRestaurants.size());
-        String searchTerm = searchInput.getText() != null ? searchInput.getText().toLowerCase() : "";
-        String locationTerm = locationText.getText() != null ? locationText.getText().toLowerCase() : "";
-
-        List<Restaurant> filtered = allRestaurants.stream()
-                .filter(r -> {
-                    boolean searchMatch = searchTerm.isEmpty() ||
-                            (r.getName() != null && r.getName().toLowerCase().contains(searchTerm)) ||
-                            (r.getDescription() != null && r.getDescription().toLowerCase().contains(searchTerm)) ||
-                            (r.getCuisine() != null && r.getCuisine().toLowerCase().contains(searchTerm));
-                    return searchMatch;
-                })
-                .filter(r -> {
-                    boolean locationMatch = true;
-                    if (!locationTerm.isEmpty() && locationTerm.contains(",")) {
-                        String cityPart = locationTerm.split(",")[0].trim().toLowerCase();
-                        locationMatch = (r.getDistance() != null && r.getDistance().toLowerCase().contains(cityPart));
-                    } else if (!locationTerm.isEmpty()) {
-                        locationMatch = (r.getDistance() != null
-                                && r.getDistance().toLowerCase().contains(locationTerm));
-                    }
-                    return locationMatch;
-                })
-                .collect(Collectors.toList());
-
-        System.out.println("Filtered restaurants count: " + filtered.size());
-
-        String sortBy = sortComboBox.getValue();
-        if (sortBy != null) {
-            switch (sortBy) {
-                case "Rating":
-                    filtered.sort(Comparator.comparingDouble(Restaurant::getRating).reversed());
-                    break;
-                case "Distance":
-                    filtered.sort(Comparator.comparingDouble(this::parseDistance));
-                    break;
-                case "Price":
-                    filtered.sort(Comparator.comparingInt(this::parsePrice));
-                    break;
-            }
-        }
-
-        int fromIndex = 0;
         int toIndex = Math.min(currentPage * PAGE_SIZE, filtered.size());
         List<Restaurant> paginatedList = filtered.subList(fromIndex, toIndex);
 
@@ -209,7 +145,7 @@ public class DashboardController {
 
         Platform.runLater(() -> rootPane.requestFocus());
 
-        sortComboBox.getItems().addAll("Rating", "Distance", "Price");
+        sortComboBox.getItems().addAll("Rating", "Price");
         sortComboBox.setOnAction(event -> {
             resetPagination();
             filterAndRenderRestaurants();
@@ -242,7 +178,8 @@ public class DashboardController {
 
         favoriteBtn.setOnAction(event -> {
             try {
-                javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/view/favorite.fxml"));
+                javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
+                        getClass().getResource("view/favorites.fxml"));
                 javafx.scene.Parent root = loader.load();
                 javafx.stage.Stage stage = (javafx.stage.Stage) favoriteBtn.getScene().getWindow();
                 javafx.scene.Scene scene = favoriteBtn.getScene();
@@ -253,7 +190,6 @@ public class DashboardController {
             }
         });
 
-        // Ensure nav containers and buttons don't occupy space when hidden
         guestButtons.managedProperty().bind(guestButtons.visibleProperty());
         userButtons.managedProperty().bind(userButtons.visibleProperty());
 
@@ -268,18 +204,36 @@ public class DashboardController {
 
         updateButtonVisibility();
 
+        currentPageText.setText("1");
+
         loadMoreBtn.setOnAction(event -> {
             currentPage++;
+            currentPageText.setText(String.valueOf(currentPage));
             filterAndRenderRestaurants();
+            updateLoadLessButtonVisibility();
         });
+
+        loadLessBtn.setOnAction(event -> {
+            if (currentPage > 1) {
+                currentPage--;
+                currentPageText.setText(String.valueOf(currentPage));
+                filterAndRenderRestaurants();
+                updateLoadLessButtonVisibility();
+            }
+        });
+
+        // Initialize loadLessBtn visibility on startup
+        updateLoadLessButtonVisibility();
+    }
+
+    private void updateLoadLessButtonVisibility() {
+        loadLessBtn.setVisible(currentPage > 1);
     }
 
     public void updateButtonVisibility() {
         theknife.UserSession userSession = theknife.UserSession.getInstance();
 
         if (userSession.isNotLoggedIn()) {
-            // Guest user
-            System.out.println("User not logged in");
             guestButtons.setVisible(true);
             userButtons.setVisible(false);
             signInBtn.setVisible(true);
@@ -292,13 +246,11 @@ public class DashboardController {
                     restaurantsBtn.setVisible(false);
                 }
             } catch (Exception e) {
-                // ignore if not found
+                // ignoralo
             }
         } else {
             String role = userSession.getRole();
-            System.out.println("User logged in with role: " + role);
             if ("owner".equalsIgnoreCase(role) || "ristoratore".equalsIgnoreCase(role)) {
-                // Owner user
                 guestButtons.setVisible(false);
                 userButtons.setVisible(true);
                 signInBtn.setVisible(false);
@@ -311,10 +263,9 @@ public class DashboardController {
                         restaurantsBtn.setVisible(true);
                     }
                 } catch (Exception e) {
-                    // ignore if not found
+                    // ignoralo
                 }
             } else if ("client".equalsIgnoreCase(role) || "cliente".equalsIgnoreCase(role)) {
-                // Client user
                 guestButtons.setVisible(false);
                 userButtons.setVisible(true);
                 signInBtn.setVisible(false);
@@ -327,10 +278,9 @@ public class DashboardController {
                         restaurantsBtn.setVisible(false);
                     }
                 } catch (Exception e) {
-                    // ignore if not found
+                    // ignoralo
                 }
             } else {
-                // Default fallback: hide all except signInBtn
                 guestButtons.setVisible(false);
                 userButtons.setVisible(false);
                 signInBtn.setVisible(false);
@@ -343,7 +293,7 @@ public class DashboardController {
                         restaurantsBtn.setVisible(false);
                     }
                 } catch (Exception e) {
-                    // ignore if not found
+                    // ignoralo
                 }
             }
         }
@@ -351,23 +301,15 @@ public class DashboardController {
 
     private void loadRestaurants() {
         allRestaurants.clear();
-        long startTime = System.currentTimeMillis();
 
         String userLocation = theknife.UserSession.getInstance().getLocation();
         if (userLocation == null || userLocation.trim().isEmpty()) {
             userLocation = locationText.getText();
         }
         if (userLocation == null || userLocation.trim().isEmpty()) {
-            System.out.println("No user location set. Skipping restaurant loading.");
             return;
         }
         userLocation = userLocation.trim().toLowerCase();
-        System.out.println("Filtering restaurants for user location: '" + userLocation + "'");
-
-        String cityPart = userLocation;
-        if (userLocation.contains(",")) {
-            cityPart = userLocation.split(",")[0].trim();
-        }
 
         String workingDir = System.getProperty("user.dir");
         java.nio.file.Path csvPath = java.nio.file.Paths.get(workingDir, "data", "michelin_my_maps.csv");
@@ -381,15 +323,12 @@ public class DashboardController {
                 lineNumber++;
                 if (firstLine) {
                     firstLine = false;
-                    System.out.println("Skipping header line: " + line);
                     continue;
                 }
 
                 String[] fields = line.split(",(?=(?:[^\\\"]*\\\"[^\\\"]*\\\")*[^\\\"]*$)", -1);
 
                 if (fields.length < 14) {
-                    System.err.println("Skipping line " + lineNumber
-                            + " due to insufficient fields (expected at least 14, got " + fields.length + "): " + line);
                     continue;
                 }
 
@@ -416,9 +355,7 @@ public class DashboardController {
                     continue;
                 }
             }
-            long endTime = System.currentTimeMillis();
-            System.out.println("Successfully loaded " + allRestaurants.size() + " restaurants in "
-                    + (endTime - startTime) + " ms from " + csvPath.toAbsolutePath());
+
         } catch (java.io.IOException e) {
             System.err.println("IOException while reading CSV file: " + csvPath.toAbsolutePath());
             e.printStackTrace();
@@ -489,18 +426,21 @@ public class DashboardController {
         card.setPrefHeight(220);
         card.setMinHeight(220);
         card.setMaxHeight(220);
+        card.setPrefWidth(220);
         card.setStyle(
                 "-fx-background-color: #333333; -fx-border-color: #444444; -fx-border-width: 1px; -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-padding: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10,0,0,2);");
 
         Text title = new Text(r.getName());
         title.getStyleClass().add("card-title");
         title.setStyle("-fx-fill: #eeeeee; -fx-font-weight: bold; -fx-font-size: 16px;");
+        title.setWrappingWidth(200);
 
         // Removed ImageView and related code as per request
 
         Text cuisine = new Text("Cuisine: " + r.getCuisine());
         cuisine.getStyleClass().add("card-cuisine");
         cuisine.setStyle("-fx-fill: #bbbbbb; -fx-font-size: 13px;");
+        cuisine.setWrappingWidth(200);
 
         Text rating = new Text(String.format("Rating: %.1f (%d reviews)", r.getRating(), r.getReviews()));
         rating.getStyleClass().add("card-rating");
@@ -517,7 +457,6 @@ public class DashboardController {
         card.getChildren().addAll(title, cuisine, rating, distance, price);
 
         card.setOnMouseClicked(event -> {
-            System.out.println("Card clicked: " + r.getName() + " (ID: " + r.getId() + ")");
             try {
                 javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
                         getClass().getResource("/view/restaurant_detail.fxml"));
@@ -526,11 +465,9 @@ public class DashboardController {
                 theknife.RestaurantDetailController controller = loader.getController();
                 controller.setRestaurant(r);
 
-                // Get current scene and set new root to preserve stage and scene
                 javafx.scene.Scene scene = card.getScene();
                 scene.setRoot(root);
 
-                // Update stage title
                 javafx.stage.Stage stage = (javafx.stage.Stage) scene.getWindow();
                 stage.setTitle(r.getName());
             } catch (Exception e) {
@@ -548,23 +485,27 @@ public class DashboardController {
                     location = location + ", Italy";
                 }
             }
-            System.out.println("setLocation called with location: '" + location + "'");
             locationText.setText(location);
+            resetPagination();
             loadRestaurants();
             filterAndRenderRestaurants();
         }
     }
 
+    public void setCurrentPage(String currentPage) {
+        currentPageText.setText(currentPage);
+        loadRestaurants();
+        filterAndRenderRestaurants();
+    }
+
     @FXML
     private void handleLocationTextClick() {
-        // Replace the locationText Text node with a TextField for inline editing
         String currentLocation = locationText.getText();
         String cityOnly = currentLocation.contains(",") ? currentLocation.split(",")[0].trim() : currentLocation.trim();
 
         javafx.scene.control.TextField editField = new javafx.scene.control.TextField(cityOnly);
         editField.setPrefWidth(locationText.getBoundsInLocal().getWidth() + 20);
 
-        // Replace locationText with editField in the parent container
         javafx.scene.Parent parent = locationText.getParent();
         if (parent instanceof javafx.scene.layout.Pane) {
             javafx.scene.layout.Pane pane = (javafx.scene.layout.Pane) parent;
@@ -574,7 +515,6 @@ public class DashboardController {
             editField.requestFocus();
             editField.selectAll();
 
-            // Commit changes on Enter key press or focus lost
             editField.setOnAction(event -> commitLocationEdit(editField, pane, index));
             editField.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
                 if (!isNowFocused) {
@@ -598,7 +538,8 @@ public class DashboardController {
 
     private void openRestaurantsPage() {
         try {
-            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/view/restaurants.fxml"));
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
+                    getClass().getResource("/view/restaurants.fxml"));
             javafx.scene.Parent root = loader.load();
             javafx.stage.Stage stage = (javafx.stage.Stage) rootPane.getScene().getWindow();
             javafx.scene.Scene scene = rootPane.getScene();

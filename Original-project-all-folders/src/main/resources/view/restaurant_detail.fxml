@@ -12,7 +12,7 @@
     <top>
         <HBox spacing="30" maxWidth="Infinity" prefHeight="60" style="-fx-background-color: #242424;">
             <HBox spacing="20" alignment="CENTER_LEFT">
-                <Button prefWidth="40" prefHeight="32" onAction="#handleGoHome" styleClass="button-back" style="-fx-background-color: transparent; -fx-border-width: 0; -fx-border-color: transparent; -fx-padding: 0;">
+                <Button prefWidth="40" prefHeight="32" onAction="#handleBack" styleClass="button-back" style="-fx-background-color: transparent; -fx-border-width: 0; -fx-border-color: transparent; -fx-padding: 0;">
                     <graphic>
                         <ImageView fx:id="arrowImageView" fitHeight="18" fitWidth="18" pickOnBounds="true" preserveRatio="true"/>
                     </graphic>
@@ -39,25 +39,63 @@
         <VBox spacing="15" style="-fx-padding: 35 0 0 10;">
             <HBox spacing="10" alignment="TOP_LEFT">
                 <Text fx:id="nameText" style="-fx-font-size: 42px; -fx-font-weight: bold; -fx-fill: white;"/>
-                <Button fx:id="heartButton" prefWidth="40" prefHeight="32" onAction="#handleFavorite" styleClass="button-back" style="-fx-background-color: transparent; -fx-border-width: 0; -fx-padding: 0;">
+                <Button fx:id="heartButton" prefWidth="50" prefHeight="40" onAction="#handleFavorite" styleClass="button-back" style="-fx-background-color: transparent; -fx-translate-y: 10; -fx-border-width: 0; -fx-padding: 0;">
                     <graphic>
                         <ImageView fx:id="heartImageView" fitHeight="18" fitWidth="18" pickOnBounds="true" preserveRatio="true"/>
                     </graphic>
                 </Button>
             </HBox>
 
-            <VBox spacing="5" style="-fx-font-size: 16px; -fx-fill: white;">
-                <Text fx:id="cuisineText"/>
-                <Text fx:id="ratingText"/>
-                <Text fx:id="reviewsText"/>
-                <Text fx:id="priceText"/>
-                <Text fx:id="distanceText"/>
+            <VBox spacing="5" style="-fx-font-size: 22px; -fx-fill: white;">
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <ImageView fitHeight="20" fitWidth="20" pickOnBounds="true" preserveRatio="true" >
+                        <image>
+                            <Image url="@../images/restaurant.png"/>
+                        </image>
+                    </ImageView>
+                    <Text fx:id="cuisineText"/>
+                </HBox>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <ImageView fitHeight="20" fitWidth="20" pickOnBounds="true" preserveRatio="true" >
+                        <image>
+                            <Image url="@../images/star.png"/>
+                        </image>
+                    </ImageView>
+                    <Text fx:id="ratingText"/>
+                </HBox>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <ImageView fitHeight="20" fitWidth="20" pickOnBounds="true" preserveRatio="true" >
+                        <image>
+                            <Image url="@../images/review.png"/>
+                        </image>
+                    </ImageView>
+                    <Text fx:id="reviewsText"/>
+                </HBox>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <ImageView fitHeight="20" fitWidth="20" pickOnBounds="true" preserveRatio="true" >
+                        <image>
+                            <Image url="@../images/dollar.png"/>
+                        </image>
+                    </ImageView>
+                    <Text fx:id="priceText"/>
+                </HBox>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <ImageView fitHeight="20" fitWidth="20" pickOnBounds="true" preserveRatio="true" >
+                        <image>
+                            <Image url="@../images/location.png"/>
+                        </image>
+                    </ImageView>
+                    <Text fx:id="distanceText"/>
+                </HBox>
             </VBox>
 
-            <TextArea fx:id="descriptionArea" editable="false" prefHeight="150" style="-fx-font-size: 14px;"/>
+            <TextArea fx:id="descriptionArea" prefHeight="150" style="-fx-font-size: 14px; -fx-background-color: transparent;" wrapText="true" editable="false" mouseTransparent="true" focusTraversable="false">
+                <VBox.margin>
+                    <javafx.geometry.Insets top="20" right="0" bottom="0" left="0"/>
+                </VBox.margin>
+            </TextArea>
 
             <HBox spacing="10" alignment="CENTER">
-                <Button fx:id="favoriteButton" text="Favorite" onAction="#handleFavorite" styleClass="filter-button"/>
                 <Button fx:id="bookButton" text="Book" onAction="#handleBook" styleClass="filter-button"/>
                 <Button fx:id="reviewButton" text="Leave Review" onAction="#handleLeaveReview" styleClass="filter-button"/>
             </HBox>

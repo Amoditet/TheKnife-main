@@ -296,15 +296,14 @@ public class RestaurantDetailController {
             javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/view/dashboard.fxml"));
             javafx.scene.Parent root = loader.load();
 
-            javafx.scene.Scene scene = backButton.getScene();
-            scene.setRoot(root);
-
-            javafx.stage.Stage stage = (javafx.stage.Stage) scene.getWindow();
+            javafx.stage.Stage stage = (javafx.stage.Stage) closeButton.getScene().getWindow();
+            stage.setScene(new javafx.scene.Scene(root));
             stage.setTitle("Dashboard");
             stage.setMaximized(true);
             stage.setFullScreenExitHint("");
             stage.setFullScreenExitKeyCombination(javafx.scene.input.KeyCombination.NO_MATCH);
             stage.setFullScreen(true);
+            stage.show();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -344,7 +343,8 @@ public class RestaurantDetailController {
         Review existing = session.getReview(restaurant.getId());
 
         if (existing != null) {
-            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
+            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
+                    javafx.scene.control.Alert.AlertType.CONFIRMATION);
             alert.setHeaderText("You already reviewed this restaurant");
             javafx.scene.control.ButtonType editBtn = new javafx.scene.control.ButtonType("Edit");
             javafx.scene.control.ButtonType deleteBtn = new javafx.scene.control.ButtonType("Delete");
@@ -360,7 +360,8 @@ public class RestaurantDetailController {
         }
 
         int initialRating = existing != null ? existing.getRating() : 5;
-        javafx.scene.control.ChoiceDialog<Integer> ratingDialog = new javafx.scene.control.ChoiceDialog<>(initialRating, java.util.Arrays.asList(1,2,3,4,5));
+        javafx.scene.control.ChoiceDialog<Integer> ratingDialog = new javafx.scene.control.ChoiceDialog<>(initialRating,
+                java.util.Arrays.asList(1, 2, 3, 4, 5));
         ratingDialog.setTitle("Rating");
         ratingDialog.setHeaderText("Select rating 1-5");
         java.util.Optional<Integer> rating = ratingDialog.showAndWait();
@@ -380,26 +381,6 @@ public class RestaurantDetailController {
         session.addOrUpdateReview(restaurant.getId(), new Review(session.getUsername(), rating.get(), text.get()));
     }
 
-    @FXML
-    private void handleGoHome() {
-        try {
-            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/view/dashboard.fxml"));
-            javafx.scene.Parent root = loader.load();
-
-            // Use any node that is guaranteed to be in the scene, e.g., closeButton
-            javafx.stage.Stage stage = (javafx.stage.Stage) closeButton.getScene().getWindow();
-            stage.setScene(new javafx.scene.Scene(root));
-            stage.setTitle("Dashboard");
-            stage.setMaximized(true);
-            stage.setFullScreenExitHint("");
-            stage.setFullScreenExitKeyCombination(javafx.scene.input.KeyCombination.NO_MATCH);
-            stage.setFullScreen(true);
-            stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     private void openLoginPage() {
         try {
             javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/view/login.fxml"));
@@ -416,7 +397,7 @@ public class RestaurantDetailController {
 
     private void openFavoritesPage() {
         try {
-            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/view/favorite.fxml"));
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/view/favorites.fxml"));
             javafx.scene.Parent root = loader.load();
             javafx.stage.Stage stage = (javafx.stage.Stage) favoriteBtn.getScene().getWindow();
             javafx.scene.Scene scene = favoriteBtn.getScene();
@@ -442,7 +423,8 @@ public class RestaurantDetailController {
 
     private void openRestaurantsPage() {
         try {
-            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/view/restaurants.fxml"));
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
+                    getClass().getResource("/view/restaurants.fxml"));
             javafx.scene.Parent root = loader.load();
             javafx.stage.Stage stage = (javafx.stage.Stage) RestaurantsBtn.getScene().getWindow();
             javafx.scene.Scene scene = RestaurantsBtn.getScene();

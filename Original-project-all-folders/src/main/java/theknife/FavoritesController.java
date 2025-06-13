@@ -1,10 +1,17 @@
 package theknife;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 
 public class FavoritesController {
     @FXML
@@ -25,17 +32,39 @@ public class FavoritesController {
     private Button exitBtn;
     @FXML
     private Button RestaurantsBtn;
+    @FXML
+    private Button backButton;
+
+    @FXML
+    private ImageView arrowImageView;
 
     @FXML
     public void initialize() {
         updateButtonVisibility();
         loadFavorites();
+
+        try {
+            Image arrowImage = new Image(getClass().getResourceAsStream("/images/left-arrow.png"));
+            arrowImageView.setImage(arrowImage);
+            ColorAdjust whiteEffect = new ColorAdjust();
+            whiteEffect.setBrightness(1.0);
+            arrowImageView.setEffect(whiteEffect);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadFavorites() {
         favoritesListView.getItems().clear();
-        for (Restaurant r : UserSession.getInstance().getFavorites()) {
-            favoritesListView.getItems().add(r.getName());
+        if (UserSession.getInstance().getFavorites().isEmpty()) {
+            favoritesListView.getItems().add("No favorites yet.");
+            favoritesListView.setDisable(true);
+        } else {
+            favoritesListView.setDisable(false);
+            for (Restaurant r : UserSession.getInstance().getFavorites()) {
+                favoritesListView.getItems().add(r.getName());
+            }
         }
     }
 
@@ -81,5 +110,45 @@ public class FavoritesController {
     private void handleExitAction() {
         javafx.application.Platform.exit();
         System.exit(0);
+    }
+
+    @FXML
+    private void handleBack() {
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/view/dashboard.fxml"));
+            javafx.scene.Parent root = loader.load();
+
+            javafx.scene.Scene scene = backButton.getScene();
+            scene.setRoot(root);
+
+            javafx.stage.Stage stage = (javafx.stage.Stage) scene.getWindow();
+            stage.setTitle("Dashboard");
+            stage.setMaximized(true);
+            stage.setFullScreenExitHint("");
+            stage.setFullScreenExitKeyCombination(javafx.scene.input.KeyCombination.NO_MATCH);
+            stage.setFullScreen(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleGoHome() {
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/view/dashboard.fxml"));
+            javafx.scene.Parent root = loader.load();
+
+            javafx.scene.Scene scene = backButton.getScene();
+            scene.setRoot(root);
+
+            javafx.stage.Stage stage = (javafx.stage.Stage) scene.getWindow();
+            stage.setTitle("Dashboard");
+            stage.setMaximized(true);
+            stage.setFullScreenExitHint("");
+            stage.setFullScreenExitKeyCombination(javafx.scene.input.KeyCombination.NO_MATCH);
+            stage.setFullScreen(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
